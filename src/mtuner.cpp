@@ -90,13 +90,16 @@ void setupLoaderToolchain(CaptureContext* _context, const QString& _file, GCCSet
 			// gui
 			QString dir = getDirFromFile(_file);
 			QString fileName = _fileDialog->getOpenFileName(_mtuner, QObject::tr("select symbol source"), dir, extensions);
-			executable = fileName.toUtf8();
+			// This needs to take a copy, because the data created by .toUtf8() goes away
+			// almost immedaitely after the call when the QByteArray is destroyed!
+			executable = rtm_string(fileName.toUtf8().constData());
 		}
 		else
 			if (!symSrcFound)
 			{
 				// cmd
-				executable = _symSource.toUtf8();
+				// Same as before.
+				executable = rtm_string(_symSource.toUtf8().constData());
 				if (executable.length() == 0)
 					rtm::Console::info("No symbol source specified, symbols will not be resolved!\n");
 			}
@@ -127,7 +130,7 @@ void setupLoaderToolchain(CaptureContext* _context, const QString& _file, GCCSet
 	else
 	{
 		tc.m_type = rdebug::Toolchain::MSVC;
-		strcpy(tc.m_toolchainPath, _symSource.toUtf8());
+		strcpy(tc.m_toolchainPath, _symSource.toUtf8().constData());
 		executable = _context->m_capture->getModuleInfos()[0].m_modulePath;
 	}
 
