@@ -201,8 +201,8 @@ bool GCCSetup::resolveToolchain(Toolchain& _toolchain, bool _64bit, rdebug::Tool
 		(QFileInfo(fullPath + append2).exists()) &&
 		(QFileInfo(fullPath + append3).exists()))
 	{
-		strcpy(_tc.m_toolchainPath,		fullPath.toUtf8());
-		strcpy(_tc.m_toolchainPrefix,	prefix.toUtf8());
+		strncpy(_tc.m_toolchainPath,	fullPath.toUtf8(),	2048);
+		strncpy(_tc.m_toolchainPrefix,	prefix.toUtf8(),	64);
 
 		_tc.m_type				= getTCType(_toolchain.m_toolchain);
 		return true;
