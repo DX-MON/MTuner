@@ -71,7 +71,7 @@ struct pSortType
 	rtm_vector<rtm::MemoryOperationGroup*>* m_allGroups;
 	pSortType(rtm_vector<rtm::MemoryOperationGroup*>& _groups) : m_allGroups(&_groups) {}
 
-	inline uint8_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_operations[0]->m_operationType; } 
+	inline uint8_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_operations[0]->m_operationType; }
 };
 
 // concurrency::parallel_radixsort Heap
@@ -80,7 +80,7 @@ struct pSortHeap
 	rtm_vector<rtm::MemoryOperationGroup*>* m_allGroups;
 	pSortHeap(rtm_vector<rtm::MemoryOperationGroup*>& _groups) : m_allGroups(&_groups) {}
 
-	inline uint64_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_operations[0]->m_allocatorHandle; } 
+	inline uint64_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_operations[0]->m_allocatorHandle; }
 };
 
 // concurrency::parallel_radixsort Size
@@ -89,7 +89,7 @@ struct pSortSize
 	rtm_vector<rtm::MemoryOperationGroup*>* m_allGroups;
 	pSortSize(rtm_vector<rtm::MemoryOperationGroup*>& _groups) : m_allGroups(&_groups) {}
 
-	inline uint32_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_operations[0]->m_allocSize; } 
+	inline uint32_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_operations[0]->m_allocSize; }
 };
 
 // concurrency::parallel_radixsort Count
@@ -98,7 +98,7 @@ struct pSortCount
 	rtm_vector<rtm::MemoryOperationGroup*>* m_allGroups;
 	pSortCount(rtm_vector<rtm::MemoryOperationGroup*>& _groups) : m_allGroups(&_groups) {}
 
-	inline uint32_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_count; } 
+	inline uint32_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_count; }
 };
 
 // concurrency::parallel_radixsort Count peak
@@ -107,7 +107,7 @@ struct pSortCountPeak
 	rtm_vector<rtm::MemoryOperationGroup*>* m_allGroups;
 	pSortCountPeak(rtm_vector<rtm::MemoryOperationGroup*>& _groups) : m_allGroups(&_groups) {}
 
-	inline uint32_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_liveCountPeak; } 
+	inline uint32_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_liveCountPeak; }
 };
 
 // concurrency::parallel_radixsort Alignment
@@ -116,7 +116,7 @@ struct pSortAlignment
 	rtm_vector<rtm::MemoryOperationGroup*>* m_allGroups;
 	pSortAlignment(rtm_vector<rtm::MemoryOperationGroup*>& _groups) : m_allGroups(&_groups) {}
 
-	inline uint8_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_operations[0]->m_alignment; } 
+	inline uint8_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_operations[0]->m_alignment; }
 };
 
 // concurrency::parallel_radixsort Group size
@@ -129,7 +129,7 @@ struct pSortGroupSize
 	{
 		rtm::MemoryOperationGroup* grp = (*m_allGroups)[_val];
 		return grp->m_operations[0]->m_allocSize * grp->m_liveCount;
-	} 
+	}
 };
 
 // concurrency::parallel_radixsort Group size
@@ -142,16 +142,16 @@ struct pSortGroupSizePeak
 	{
 		rtm::MemoryOperationGroup* grp = (*m_allGroups)[_val];
 		return grp->m_operations[0]->m_allocSize * grp->m_liveCountPeak;
-	} 
+	}
 };
 
 // concurrency::parallel_radixsort Live count
-struct pSortLive 
+struct pSortLive
 {
 	rtm_vector<rtm::MemoryOperationGroup*>* m_allGroups;
 	pSortLive(rtm_vector<rtm::MemoryOperationGroup*>& _groups) : m_allGroups(&_groups) {}
 
-	inline uint32_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_liveCount; } 
+	inline uint32_t operator()(const uint32_t _val) const { return (*m_allGroups)[_val]->m_liveCount; }
 };
 
 // concurrency::parallel_radixsort Live count
@@ -170,7 +170,7 @@ struct pSetGroupMappings
 			rtm::MemoryOperationGroup* group = (*m_allGroups)[idx];
 			group->m_indexMappings[col] = i;
 		}
-	} 
+	}
 };
 
 #else
@@ -288,7 +288,7 @@ GroupTableSource::GroupTableSource(CaptureContext* _context, GroupList* _list ) 
 void GroupTableSource::prepareData()
 {
 	bool filterEnabled = m_list->getFilteringState();
-	
+
 	const rtm::MemoryGroupsHashType* groups = &m_context->m_capture->getMemoryGroups();
 	if (filterEnabled)
 		groups = &m_context->m_capture->getMemoryGroupsFiltered();
@@ -313,7 +313,7 @@ void GroupTableSource::prepareData()
 
 	// init index arrays for columns
 	const uint32_t numCols = m_numColumns;
-	
+
 	for (uint32_t i=0; i<numCols; ++i)
 	{
 		m_groupMappings[i].m_sortedIdx.clear();
@@ -334,10 +334,10 @@ void GroupTableSource::prepareData()
 
 	pSortType psType(m_allGroups);
 	concurrency::parallel_radixsort(m_groupMappings[GroupColumn::Type].m_sortedIdx.begin(), m_groupMappings[GroupColumn::Type].m_sortedIdx.end(), psType );
-	
+
 	pSortHeap psHeap(m_allGroups);
 	concurrency::parallel_radixsort(m_groupMappings[GroupColumn::Heap].m_sortedIdx.begin(), m_groupMappings[GroupColumn::Heap].m_sortedIdx.end(), psHeap );
-	
+
 	pSortSize psSize(m_allGroups);
 	concurrency::parallel_radixsort(m_groupMappings[GroupColumn::Size].m_sortedIdx.begin(), m_groupMappings[GroupColumn::Size].m_sortedIdx.end(), psSize );
 
@@ -436,7 +436,7 @@ QString GroupTableSource::getItem(uint32_t _index, int32_t _column, QColor*, boo
 
 			return typeName[group->m_operations[0]->m_operationType];
 		}
-	
+
 		case GroupColumn::Heap:
 			{
 				rtm::HeapsType& heaps = m_context->m_capture->getHeaps();
@@ -446,13 +446,13 @@ QString GroupTableSource::getItem(uint32_t _index, int32_t _column, QColor*, boo
 				else
 					return "0x" + QString::number(group->m_operations[0]->m_allocatorHandle, 16);
 			}
-		
+
 		case GroupColumn::Size:
 			return locale.toString(group->m_operations[0]->m_allocSize);
-	
+
 		case GroupColumn::Count:
 			return locale.toString(group->m_count);
-	
+
 		case GroupColumn::CountPeak:
 			return locale.toString(group->m_liveCountPeak);
 
@@ -466,7 +466,7 @@ QString GroupTableSource::getItem(uint32_t _index, int32_t _column, QColor*, boo
 
 		case GroupColumn::GroupSize:
 			return locale.toString(group->m_liveCount * group->m_operations[0]->m_allocSize);
-	
+
 		case GroupColumn::GroupPeakSize:
 			return locale.toString(group->m_liveCountPeak * group->m_operations[0]->m_allocSize);
 
