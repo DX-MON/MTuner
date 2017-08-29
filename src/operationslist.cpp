@@ -44,6 +44,7 @@ class OperationTableSource : public BigTableSource
 
 	public:
 		OperationTableSource(CaptureContext* _context, OperationsList* _list);
+		virtual ~OperationTableSource() = default;
 
 		void prepareData();
 
@@ -236,9 +237,9 @@ QString OperationTableSource::getItem(uint32_t _index, int32_t _column, QColor* 
 
 	switch (_column)
 	{
-		case OperationColumn::ThreadID: 
+		case OperationColumn::ThreadID:
 			return "0x" + QString::number(op->m_threadID,16);
-			
+
 		case OperationColumn::Heap:
 			{
 				rtm::HeapsType& heaps = m_context->m_capture->getHeaps();
@@ -248,8 +249,8 @@ QString OperationTableSource::getItem(uint32_t _index, int32_t _column, QColor* 
 				else
 					return "0x" + QString::number(op->m_allocatorHandle, 16);
 			}
-			
-		case OperationColumn::Address: 
+
+		case OperationColumn::Address:
 			return "0x" + QString::number(op->m_pointer,16);
 
 		case OperationColumn::Type:
@@ -321,14 +322,14 @@ void OperationTableSource::sortColumn(uint32_t _columnIndex, Qt::SortOrder _sort
 			Concurrency::parallel_radixsort(m_mapping.m_sortedIndex.begin(), m_mapping.m_sortedIndex.end(), psThreadID);
 		}
 		break;
-			
+
 		case OperationColumn::Heap:
 		{
 			pSortHeap psHeap(m_allOps);
 			Concurrency::parallel_radixsort(m_mapping.m_sortedIndex.begin(), m_mapping.m_sortedIndex.end(), psHeap);
 		}
 		break;
-			
+
 		case OperationColumn::Address:
 		{
 			pSortAddress psAddress(m_allOps);
